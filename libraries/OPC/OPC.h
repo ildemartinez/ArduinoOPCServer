@@ -7,7 +7,7 @@
   #include <WProgram.h>
 #endif
 
-#define MAXOPCITEMNAME 32
+#define MAXOPCITEMNAME 35
 #define SERIALCOMMAND_MAXCOMMANDLENGTH 64
 #define SERIALCOMMAND_BUFFER 128
 
