@@ -25,10 +25,24 @@ void OPC::addItem(const char *itemID, opcAccessRights opcAccessRight, opctypes o
 
 void OPC::internaladdItem(const char *itemID, opcAccessRights opcAccessRight, opctypes opctype, int callback_function)  
 {
+  //extern int __heap_start, *__brkval; 
+  //int v; 
+  //Serial.print(F("Free memory:"));
+  //Serial.println( (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval));
+  
   OPCItemList = (OPCItemType *) realloc(OPCItemList, (OPCItemsCount + 1) * sizeof(OPCItemType));
-  strncpy(OPCItemList[OPCItemsCount].itemID, itemID, MAXOPCITEMNAME);
-  OPCItemList[OPCItemsCount].itemType = opctype; 
-  OPCItemList[OPCItemsCount].opcAccessRight = opcAccessRight; 
-  OPCItemList[OPCItemsCount].ptr_callback = callback_function; 
-  OPCItemsCount++;
+  if (OPCItemList != NULL) {
+    OPCItemList[OPCItemsCount].itemType = opctype; 
+
+    OPCItemList[OPCItemsCount].itemID = (char *) malloc(strlen(itemID)+1);
+    strncpy(&OPCItemList[OPCItemsCount].itemID[0], itemID, strlen(itemID)+1);
+
+    Serial.println(OPCItemList[OPCItemsCount].itemID);
+    OPCItemList[OPCItemsCount].opcAccessRight = opcAccessRight; 
+    OPCItemList[OPCItemsCount].ptr_callback = callback_function;
+    OPCItemsCount++;
+  } else {
+     Serial.println(F("Not enough memory")); 
+  }
+  
 }

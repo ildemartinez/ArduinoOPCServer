@@ -7,7 +7,6 @@
   #include <WProgram.h>
 #endif
 
-#define MAXOPCITEMNAME 35
 #define SERIALCOMMAND_MAXCOMMANDLENGTH 64
 #define SERIALCOMMAND_BUFFER 128
 
@@ -39,7 +38,7 @@ protected:
 public:
   OPC();
   struct OPCItemType {     
-    char itemID[MAXOPCITEMNAME + 1];
+    char *itemID;
     opcAccessRights opcAccessRight;
     opctypes itemType;
     unsigned int ptr_callback;

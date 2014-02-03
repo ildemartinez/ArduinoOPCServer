@@ -9,18 +9,18 @@ void OPCSerial::setup()
 
 void OPCSerial::sendOPCItemsMap()
 { 
-  Serial.print("<0");
+  Serial.print(F("<0"));
 
   for(int k=0;k<OPCItemsCount;k++) {    
-    Serial.print(",");
+    Serial.print(F(","));
     Serial.print(OPCItemList[k].itemID);
-    Serial.print(",");
+    Serial.print(F(","));
     Serial.print(int(OPCItemList[k].opcAccessRight));
-    Serial.print(",");
+    Serial.print(F(","));
     Serial.print(int(OPCItemList[k].itemType));
   }
 
-  Serial.println(">");
+  Serial.println(F(">"));
 }
 
 OPCSerial::OPCSerial()  {
