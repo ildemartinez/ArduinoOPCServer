@@ -37,7 +37,6 @@ void OPC::internaladdItem(const char *itemID, opcAccessRights opcAccessRight, op
     OPCItemList[OPCItemsCount].itemID = (char *) malloc(strlen(itemID)+1);
     strncpy(&OPCItemList[OPCItemsCount].itemID[0], itemID, strlen(itemID)+1);
 
-    Serial.println(OPCItemList[OPCItemsCount].itemID);
     OPCItemList[OPCItemsCount].opcAccessRight = opcAccessRight; 
     OPCItemList[OPCItemsCount].ptr_callback = callback_function;
     OPCItemsCount++;
