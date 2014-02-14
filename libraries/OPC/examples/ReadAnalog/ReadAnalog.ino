@@ -1,4 +1,6 @@
 #include <OPCSerial.h>
+#include <SPI.h>
+#include <Ethernet.h>
 
 /*
  * Declaring the OPC object
