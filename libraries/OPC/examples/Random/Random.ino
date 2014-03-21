@@ -5,7 +5,7 @@
 /*
  * Declaring the OPC object
  */
-//OPCSerial aOPCSerial;
+OPCSerial aOPCSerial;
 
 /*
  * create a callback function for the OPCItem
@@ -20,19 +20,19 @@ void setup() {
   /*
    * OPC Object initialization
    */
-//  aOPCSerial.setup();
+  aOPCSerial.setup();
   
   /*
    * random OPCItem declaration
    */
-//  aOPCSerial.addItem("random",opc_read, opc_int, callback);
+  aOPCSerial.addItem("random",opc_read, opc_int, callback);
 }
 
 void loop() {
   /*
    * OPC process commands
    */
-//  aOPCSerial.processOPCCommands();
+  aOPCSerial.processOPCCommands();
 }
 
 
