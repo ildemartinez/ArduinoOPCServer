@@ -33,9 +33,9 @@ float itemfloatasc = 0.01;
 bool item_bool(const char *itemID, const opcOperation opcOP, const bool value){
   if (opcOP == opc_opwrite) { }
   else {
-    if (!strncmp(itemID, "item_bool_true",MAXOPCITEMNAME)) return true; 
-    else if (!strncmp(itemID, "item_bool_false",MAXOPCITEMNAME)) return false; 
-      else if (!strncmp(itemID, "item_bool_random",MAXOPCITEMNAME)) return random(0,2);  
+    if (!strcmp(itemID, "item_bool_true")) return true; 
+    else if (!strcmp(itemID, "item_bool_false")) return false; 
+      else if (!strcmp(itemID, "item_bool_random")) return random(0,2);  
   }
 }
 
