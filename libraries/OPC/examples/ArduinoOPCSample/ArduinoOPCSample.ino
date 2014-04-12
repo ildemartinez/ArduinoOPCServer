@@ -12,7 +12,7 @@
 /*
  * 1 .- Include OPC Libraries
  */
-#include <OPCSerial.h>
+#include <OPC.h>
 #include <SPI.h>
 #include <Ethernet.h>
 

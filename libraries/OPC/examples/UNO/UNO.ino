@@ -1,8 +1,7 @@
 /*
  * A generic sketch for use with the Arduino OPC DA Serial Server
  */
-#include <OPCSerial.h>
-
+#include <OPC.h>
 
 OPCSerial aOPCSerial;
 

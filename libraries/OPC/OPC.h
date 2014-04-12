@@ -51,4 +51,20 @@ public:
 
 };
 
+class OPCSerial : public OPC {
+public: 
+  OPCSerial();
+  void setup();
+  void processOPCCommands();
+private:                       
+  void sendOPCItemsMap();     
+};
+
+class OPCYun : public OPC {
+public:
+  OPCYun();
+  void setup();
+  void processOPCCommands();  
+};
+
 #endif

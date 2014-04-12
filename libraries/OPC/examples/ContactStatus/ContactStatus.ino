@@ -1,4 +1,4 @@
-#include <OPCSerial.h>
+#include <OPC.h>
 
 OPCSerial aOPCSerial;
 

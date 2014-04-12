@@ -3,7 +3,7 @@
 /*
  * Declaring the OPC object
  */
-OPCSerial aOPCSerial;
+OPCNet aOPCNet;
 
 void setup() {
   /*
@@ -18,7 +18,3 @@ void loop() {
    */
   aOPCSerial.processOPCCommands();
 }
-
-
-
-
