@@ -84,7 +84,7 @@ void loop() {
 
 You can upload this code and open a terminal. If you send intro to your Arduino it will return all items declared, if you send the name of declared item you will get the value returned by the callback function.
 
-
+Here you could find more information and a videotutorial about this topic http://www.st4makers.com/arduino-opc-server/installation-guides/easy-testing-of-your-opc-sketch
 
 
 At this moment you can visit the project page at http://www.st4makers.com and download it.
