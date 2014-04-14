@@ -12,13 +12,31 @@ First of all you have to have in mind what do you want provide to the external w
 
 At this moment you can publish your items using serial or http ways. To do this you have some objects that you can use.
 
-Declare OPCSerial aOPC; for serial use
-Declare OPCNet aOPC; for http use
+Declare 
+```
+OPCSerial aOPC; 
+```
+for serial use or
+```
+OPCNet aOPC;
+```
+for http use
 
 Declare your items
 ------------------
 
 An item can be a real or virtual input/output pin of your Arduino. For example, you would want to publish your analog input A0 to the external world or a virtual value based in some operations made with your Arduino using real pins or calculations.
+
+You can declare your item this way
+
+```
+aOPC.addItem("random",opc_read, opc_int, callback);
+````
+
+where the first param declares your item name
+second one tell to the library if is read, read/write or write only item (valid values are opc_read, opc_write, opc_readwrite)
+
+
 
 
 
