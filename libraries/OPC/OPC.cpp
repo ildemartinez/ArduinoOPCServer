@@ -181,7 +181,8 @@ void OPCNet::sendOPCItemsMap()
 { 
   client.print(F("["));
 
-  for(int k=0;k<OPCItemsCount;k++) {    
+  for(int k=0;k<OPCItemsCount;k++) {
+    if (k) client.print(F(","));    
     client.print(F("{"));
     client.print("\"ItemId\":"); 
     client.print("\""); client.print(OPCItemList[k].itemID); client.print("\"");
