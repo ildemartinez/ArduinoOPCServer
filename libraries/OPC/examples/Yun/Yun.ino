@@ -3,18 +3,18 @@
 /*
  * Declaring the OPC object
  */
-OPCNet aOPCNet;
+OPCNet aOPC;
 
 void setup() {
   /*
    * OPC Object initialization
    */
-  aOPCSerial.setup();
+  aOPC.setup();
 }
 
 void loop() {
   /*
    * OPC process commands
    */
-  aOPCSerial.processOPCCommands();
+  aOPC.processOPCCommands();
 }

@@ -1,11 +1,10 @@
 #ifndef OPC_H
 #define OPC_H
 
-#if defined(ARDUINO) && ARDUINO >= 100
-  #include <Arduino.h>
-#else
-  #include <WProgram.h>
-#endif
+#include <Arduino.h>
+#include <Bridge.h>
+#include <YunServer.h>
+#include <YunClient.h>
 
 #define SERIALCOMMAND_MAXCOMMANDLENGTH 64
 #define SERIALCOMMAND_BUFFER 128
@@ -35,6 +34,8 @@ protected:
   byte OPCItemsCount;
   char buffer[SERIALCOMMAND_BUFFER + 1];
   byte bufPos; 
+
+ // virtual void sendOPCItemsMap(); 
 public:
   OPC();
   struct OPCItemType {     
@@ -48,21 +49,25 @@ public:
   void addItem(const char *itemID, opcAccessRights opcAccessRight, opctypes opctype, byte  (*function)(const char *itemID, const opcOperation opcOP, const byte value));  
   void addItem(const char *itemID, opcAccessRights opcAccessRight, opctypes opctype, int   (*function)(const char *itemID, const opcOperation opcOP, const int value));
   void addItem(const char *itemID, opcAccessRights opcAccessRight, opctypes opctype, float (*function)(const char *itemID, const opcOperation opcOP, const float value));  
-
 };
 
 class OPCSerial : public OPC {
+protected:
+  void sendOPCItemsMap();
 public: 
   OPCSerial();
   void setup();
-  void processOPCCommands();
-private:                       
-  void sendOPCItemsMap();     
+  void processOPCCommands();                   
 };
 
-class OPCYun : public OPC {
+class OPCNet : public OPC {
+private:
+  YunServer server;
+  YunClient client;
+protected:
+  void sendOPCItemsMap();
 public:
-  OPCYun();
+  OPCNet();
   void setup();
   void processOPCCommands();  
 };

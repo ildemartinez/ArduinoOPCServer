@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
 
+/************************************* OPC */
+
 OPC::OPC() : OPCItemList(NULL) ,  OPCItemsCount(0) {
 }
 
@@ -48,7 +50,7 @@ void OPC::internaladdItem(const char *itemID, opcAccessRights opcAccessRight, op
   
 }
 
-
+/************************************* OPCSerial */
 
 void OPCSerial::setup()
 {
@@ -112,7 +114,6 @@ void OPCSerial::processOPCCommands() {
                       float_callback = (float (*)(const char *itemID, const opcOperation opcOP, const float value))(OPCItemList[i].ptr_callback);
                       Serial.println(float_callback(OPCItemList[i].itemID,opc_opread,NULL));
                       break;                      
-
           }          
 
           matched = true;
@@ -162,6 +163,95 @@ void OPCSerial::processOPCCommands() {
       }
     }
   }
+}
+
+/************************************* OPCNet */
+
+OPCNet::OPCNet() {
+      
+}
+
+void OPCNet::setup() {
+  Bridge.begin();
+  server.listenOnLocalhost();
+  server.begin();
+}
+
+void OPCNet::sendOPCItemsMap()
+{ 
+  client.print(F("["));
+
+  for(int k=0;k<OPCItemsCount;k++) {    
+    client.print(F("{"));
+    client.print("\"ItemId\":"); 
+    client.print("\""); client.print(OPCItemList[k].itemID); client.print("\"");
+    client.print(",\"AccessRight\":");
+    client.print("\""); client.print(int(OPCItemList[k].opcAccessRight)); client.print("\"");
+    client.print(",\"ItemType\":");
+    client.print("\"");client.print(int(OPCItemList[k].itemType));    client.print("\"");
+    client.print(F("}"));
+  }
+
+  client.print(F("]"));
+}
+
+void OPCNet::processOPCCommands() {
+  bool matched = false;
+  bool (*bool_callback)(const char *itemID, const opcOperation opcOP, const bool value);
+  byte (*byte_callback)(const char *itemID, const opcOperation opcOP, const byte value);  
+  int (*int_callback)(const char *itemID, const opcOperation opcOP, const int value);
+  float (*float_callback)(const char *itemID, const opcOperation opcOP, const float value);  
+
+ client = server.accept();
+
+ if (client) {
+  //String command = client.readStringUntil('/');
+  bufPos = 0;
+  while (client.available())
+    buffer[bufPos++] = client.read();
+
+  if (bufPos > 2) { // avoid 13 10 chars
+    buffer[bufPos-2] = '\0';
+
+    if (!strcmp(buffer, "itemsmap")) { 
+     sendOPCItemsMap();
+    }   
+    else
+    { 
+      for (int i = 0; i < OPCItemsCount; i++) {   
+      if (!strcmp(buffer, OPCItemList[i].itemID))  {                             
+                  // Execute the stored handler function for the command  
+          switch (OPCItemList[i].itemType) {
+            case opc_bool :
+                      bool_callback = (bool (*)(const char *itemID, const opcOperation opcOP, const bool value))(OPCItemList[i].ptr_callback);
+                      client.print(bool_callback(OPCItemList[i].itemID,opc_opread,NULL));                      
+                      break;
+            case opc_byte :
+                      byte_callback = (byte (*)(const char *itemID, const opcOperation opcOP, const byte value))(OPCItemList[i].ptr_callback);
+                      client.print(byte_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                      break;
+            case opc_int : 
+                      int_callback = (int (*)(const char *itemID, const opcOperation opcOP, const int value))(OPCItemList[i].ptr_callback);
+                      client.print(int_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                      break;
+            case opc_float : 
+                      float_callback = (float (*)(const char *itemID, const opcOperation opcOP, const float value))(OPCItemList[i].ptr_callback);
+                      client.print(float_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                      break;                      
+          }          
+
+          matched = true;
+          break;
+        }
+      } 
+    }   
+  }               
+               
+    // Close connection and free resources.
+    client.stop();
+  }
+
+  delay(50); // Poll every 50ms
 }
 
 
