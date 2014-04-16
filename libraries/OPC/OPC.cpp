@@ -226,7 +226,11 @@ void OPCNet::processOPCCommands() {
         for (int i = 0; i < OPCItemsCount; i++) {   
         if (!strcmp(buffer, OPCItemList[i].itemID))  {                             
             // Execute the stored handler function for the command  
-            switch (OPCItemList[i].itemType) {
+            client.print(F("[{\"ItemId\":\"")); 
+            client.print(buffer); 
+            client.print(F("\",\"ItemValue\":\""));  
+              
+            switch (OPCItemList[i].itemType) {  
               case opc_bool :
                         bool_callback = (bool (*)(const char *itemID, const opcOperation opcOP, const bool value))(OPCItemList[i].ptr_callback);
                         client.print(bool_callback(OPCItemList[i].itemID,opc_opread,NULL));                      
@@ -244,6 +248,7 @@ void OPCNet::processOPCCommands() {
                         client.print(float_callback(OPCItemList[i].itemID,opc_opread,NULL));
                         break;                      
             }          
+            client.print(F("\"}]"));
 
             matched = true;
             break;
