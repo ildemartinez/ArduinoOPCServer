@@ -197,6 +197,7 @@ void OPCNet::sendOPCItemsMap()
 }
 
 void OPCNet::processOPCCommands() {
+  char *p,*j;
   bool matched = false;
   bool (*bool_callback)(const char *itemID, const opcOperation opcOP, const bool value);
   byte (*byte_callback)(const char *itemID, const opcOperation opcOP, const byte value);  
@@ -214,42 +215,75 @@ void OPCNet::processOPCCommands() {
   if (bufPos > 2) { // avoid 13 10 chars
     buffer[bufPos-2] = '\0';
 
-    if (!strcmp(buffer, "itemsmap")) { 
-     sendOPCItemsMap();
-    }   
-    else
-    { 
-      for (int i = 0; i < OPCItemsCount; i++) {   
-      if (!strcmp(buffer, OPCItemList[i].itemID))  {                             
-                  // Execute the stored handler function for the command  
-          switch (OPCItemList[i].itemType) {
-            case opc_bool :
-                      bool_callback = (bool (*)(const char *itemID, const opcOperation opcOP, const bool value))(OPCItemList[i].ptr_callback);
-                      client.print(bool_callback(OPCItemList[i].itemID,opc_opread,NULL));                      
-                      break;
-            case opc_byte :
-                      byte_callback = (byte (*)(const char *itemID, const opcOperation opcOP, const byte value))(OPCItemList[i].ptr_callback);
-                      client.print(byte_callback(OPCItemList[i].itemID,opc_opread,NULL));
-                      break;
-            case opc_int : 
-                      int_callback = (int (*)(const char *itemID, const opcOperation opcOP, const int value))(OPCItemList[i].ptr_callback);
-                      client.print(int_callback(OPCItemList[i].itemID,opc_opread,NULL));
-                      break;
-            case opc_float : 
-                      float_callback = (float (*)(const char *itemID, const opcOperation opcOP, const float value))(OPCItemList[i].ptr_callback);
-                      client.print(float_callback(OPCItemList[i].itemID,opc_opread,NULL));
-                      break;                      
-          }          
+    p = strtok_r(buffer,"/",&j);
 
-          matched = true;
-          break;
-        }
+    if (!j[0]) {
+      if (!strcmp(buffer, "itemsmap")) { 
+       sendOPCItemsMap();
+      }   
+      else
+      { 
+        for (int i = 0; i < OPCItemsCount; i++) {   
+        if (!strcmp(buffer, OPCItemList[i].itemID))  {                             
+            // Execute the stored handler function for the command  
+            switch (OPCItemList[i].itemType) {
+              case opc_bool :
+                        bool_callback = (bool (*)(const char *itemID, const opcOperation opcOP, const bool value))(OPCItemList[i].ptr_callback);
+                        client.print(bool_callback(OPCItemList[i].itemID,opc_opread,NULL));                      
+                        break;
+              case opc_byte :
+                        byte_callback = (byte (*)(const char *itemID, const opcOperation opcOP, const byte value))(OPCItemList[i].ptr_callback);
+                        client.print(byte_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                        break;
+              case opc_int : 
+                        int_callback = (int (*)(const char *itemID, const opcOperation opcOP, const int value))(OPCItemList[i].ptr_callback);
+                        client.print(int_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                        break;
+              case opc_float : 
+                        float_callback = (float (*)(const char *itemID, const opcOperation opcOP, const float value))(OPCItemList[i].ptr_callback);
+                        client.print(float_callback(OPCItemList[i].itemID,opc_opread,NULL));
+                        break;                      
+            }          
+
+            matched = true;
+            break;
+          }
+        } 
       } 
-    }   
+    }
+    else
+    {
+      for (int i = 0; i < OPCItemsCount; i++) {   
+        if (!strcmp(buffer, OPCItemList[i].itemID))  {                                    
+
+            // Call the stored handler function for the command                          
+            switch (OPCItemList[i].itemType) {
+            case opc_bool :
+                    bool_callback = (bool (*)(const char *itemID, const opcOperation opcOP, const bool value))(OPCItemList[i].ptr_callback);
+                    bool_callback(OPCItemList[i].itemID,opc_opwrite,atoi(j));
+                    break;
+            case opc_byte :
+                    byte_callback = (byte (*)(const char *itemID, const opcOperation opcOP, const byte value))(OPCItemList[i].ptr_callback);
+                    byte_callback(OPCItemList[i].itemID,opc_opwrite,atoi(j));
+                    break;
+            case opc_int : 
+                    int_callback = (int (*)(const char *itemID, const opcOperation opcOP, const int value))(OPCItemList[i].ptr_callback);
+                    int_callback(OPCItemList[i].itemID,opc_opwrite,atoi(j));
+                    break;
+            case opc_float : 
+                    float_callback = (float (*)(const char *itemID, const opcOperation opcOP, const float))(OPCItemList[i].ptr_callback);
+                    float_callback(OPCItemList[i].itemID,opc_opwrite,atof(j));
+                    break;                      
+            } 
+            matched = true;
+            break;
+          }
+        } 
+    }  
   }               
                
     // Close connection and free resources.
-    client.stop();
+  client.stop();
   }
 
   delay(50); // Poll every 50ms
